@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* Light mode */
+        --background: 0 0% 100%;
+        --foreground: 222 47% 11%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 11%;
+
+        /* Primary = amber brand accent */
+        --primary: 38 92% 50%;
+        --primary-foreground: 222 47% 11%;
+
+        /* Secondary = navy */
+        --secondary: 215 50% 23%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 16% 47%;
+
+        --accent: 38 92% 50%;
+        --accent-foreground: 222 47% 11%;
+
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 214 32% 91%;
+        --input: 214 32% 91%;
+        --ring: 38 92% 50%;
+
+        --radius: 0.5rem;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-background text-foreground antialiased;
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    * {
+        @apply box-border;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+/* ── BASE RESET ── */
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground antialiased;
+        font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+
+
+    /* Smooth scrolling, respecting user motion preference */
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* ── ACCESSIBILITY: REDUCED MOTION ── */
+/* Disables ALL animations for users who prefer reduced motion.
+   This covers WCAG 2.1 SC 2.3.3 (Animation from Interactions). */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ── UTILITY CLASSES ── */
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+
+
+    /* Shimmer loading effect */
+    .shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 1000px 100%;
+        @apply animate-shimmer;
+    }
+
+    /* GPU-composited layer hint for parallax/animation elements */
+    .gpu-layer {
+        will-change: transform;
+        transform: translateZ(0);
+    }
+
+    /* Visually hidden but accessible to screen readers */
+    .sr-only-focusable:not(:focus):not(:focus-within) {
+        @apply sr-only;
+    }
+
+    /* Premium Glassmorphism */
+    .glass-panel {
+        @apply relative overflow-hidden backdrop-blur-md bg-glass-gradient border border-white/10 shadow-elegant-glow rounded-2xl;
+    }
+
+    .glass-panel::before {
+        content: '';
+        @apply absolute inset-0 rounded-2xl pointer-events-none border border-white/20 opacity-50;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+
+}
