@@ -8,8 +8,8 @@ const links = {
     { label: 'Roadmap', href: '#' },
   ],
   Company: [
-    { label: 'About DogForce', href: '#' },
-    { label: 'Contact', href: 'mailto:hello@deployguard.io' },
+    { label: 'About us', href: '#' },
+    { label: 'Contact us', href: 'mailto:creativesites263@gmail.com' },
     { label: 'Book a Demo', href: '#' },
   ],
   Legal: [
@@ -58,7 +58,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} DogForce Security Services. All rights reserved.
+            © {new Date().getFullYear()} DeployGuard OS. All rights reserved.
           </p>
           <p className="text-xs text-gray-500">
             Built for Africa. Designed for the world.
