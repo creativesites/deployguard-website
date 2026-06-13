@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,8 +6,8 @@
 
 @layer base {
     :root {
-        /* Light mode */
-        --background: 0 0% 100%;
+        /* Light mode: Clean, crisp, high-trust */
+        --background: 210 40% 98%;
         --foreground: 222 47% 11%;
 
         --card: 0 0% 100%;
@@ -16,17 +16,18 @@
         --popover: 0 0% 100%;
         --popover-foreground: 222 47% 11%;
 
-        /* Primary = amber brand accent */
+        /* Primary: Electric Cyan/Blue (High visibility, tech-focused) */
         --primary: 38 92% 50%;
         --primary-foreground: 222 47% 11%;
 
-        /* Secondary = navy */
+        /* Secondary: Cool Slate */
         --secondary: 215 50% 23%;
         --secondary-foreground: 0 0% 100%;
 
-        --muted: 210 40% 96%;
+        --muted: 214 32% 91%;
         --muted-foreground: 215 16% 47%;
 
+        /* Accent: High-vis Amber for warnings/alerts */
         --accent: 38 92% 50%;
         --accent-foreground: 222 47% 11%;
 
@@ -35,28 +36,43 @@
 
         --border: 214 32% 91%;
         --input: 214 32% 91%;
-        --ring: 38 92% 50%;
+        --ring: 199 89% 48%;
 
         --radius: 0.5rem;
+
+        --font-inter: 'Inter', sans-serif;
+        --font-outfit: 'Outfit', sans-serif;
     }
 
-    html {
-        scroll-behavior: smooth;
-    }
+    .dark {
+        /* Dark mode: Tactical, premium, dashboard-optimized */
+        --background: 224 71% 4%;
+        --foreground: 210 40% 98%;
 
-    body {
-        @apply bg-background text-foreground antialiased;
-        font-family: 'Inter', system-ui, sans-serif;
-    }
+        --card: 222 47% 11%;
+        --card-foreground: 210 40% 98%;
 
-    * {
-        @apply box-border;
-    }
-}
+        --popover: 222 47% 11%;
+        --popover-foreground: 210 40% 98%;
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
+        --primary: 199 89% 48%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 217 32% 17%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 217 32% 17%;
+        --muted-foreground: 215 20% 65%;
+
+        --accent: 38 92% 50%;
+        --accent-foreground: 222 47% 11%;
+
+        --destructive: 0 62% 30%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217 32% 17%;
+        --input: 217 32% 17%;
+        --ring: 199 89% 48%;
     }
 }
 
@@ -80,8 +96,6 @@
         font-family: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
     }
 
-
-
     /* Smooth scrolling, respecting user motion preference */
     html {
         scroll-behavior: smooth;
@@ -89,8 +103,6 @@
 }
 
 /* ── ACCESSIBILITY: REDUCED MOTION ── */
-/* Disables ALL animations for users who prefer reduced motion.
-   This covers WCAG 2.1 SC 2.3.3 (Animation from Interactions). */
 @media (prefers-reduced-motion: reduce) {
 
     *,
@@ -109,11 +121,9 @@
         text-wrap: balance;
     }
 
-
-
     /* Shimmer loading effect */
     .shimmer {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
         background-size: 1000px 100%;
         @apply animate-shimmer;
     }
@@ -129,18 +139,16 @@
         @apply sr-only;
     }
 
-    /* Premium Glassmorphism */
+    /* Premium Glassmorphism (Updated for darker tactical theme) */
     .glass-panel {
-        @apply relative overflow-hidden backdrop-blur-md bg-glass-gradient border border-white/10 shadow-elegant-glow rounded-2xl;
+        @apply relative overflow-hidden backdrop-blur-xl bg-background/60 border border-white/5 shadow-2xl rounded-2xl;
     }
 
     .glass-panel::before {
         content: '';
-        @apply absolute inset-0 rounded-2xl pointer-events-none border border-white/20 opacity-50;
+        @apply absolute inset-0 rounded-2xl pointer-events-none border border-white/10 opacity-30;
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
     }
-
-
 }

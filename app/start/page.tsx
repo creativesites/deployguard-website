@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
-import { Shield, Check, ArrowLeft } from 'lucide-react'
+import { Shield, ArrowLeft, ExternalLink, Loader2, Globe, Monitor, Smartphone } from 'lucide-react'
+import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react'
+
+const DEMO_URL = 'http://47.84.205.81:8069/odoo/'
 
 const COUNTRIES = [
   'Namibia', 'Zambia', 'South Africa', 'Botswana', 'Zimbabwe',
@@ -11,9 +14,9 @@ const COUNTRIES = [
 ]
 
 const GUARD_OPTIONS = [
-  { label: '1 – 50 guards',    value: 50  },
-  { label: '51 – 250 guards',  value: 250 },
-  { label: '251+ guards',      value: 500 },
+  { label: '1 – 50 guards',   value: 50  },
+  { label: '51 – 250 guards', value: 250 },
+  { label: '251+ guards',     value: 500 },
 ]
 
 interface FormData {
@@ -26,17 +29,66 @@ interface FormData {
   message:      string
 }
 
+type PageState = 'checking' | 'returning' | 'form' | 'submitted'
+
+function openDemo() {
+  window.open(DEMO_URL, '_blank', 'noopener,noreferrer')
+}
+
 export default function StartPage() {
+  const [pageState, setPageState] = useState<PageState>('checking')
+  const [returningName, setReturningName] = useState<string | null>(null)
   const [form, setForm] = useState<FormData>({
     companyName: '', contactName: '', email: '',
     phone: '', country: 'Namibia', guardCount: 50, message: '',
   })
-  const [loading,   setLoading]   = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [error,     setError]     = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+
+  const { data: fpData, isLoading: fpLoading } = useVisitorData(
+    { extendedResult: true },
+    { immediate: true },
+  )
+
+  // Once fingerprint resolves, check if this is a returning visitor
+  useEffect(() => {
+    if (fpLoading || !fpData) return
+
+    async function checkVisitor() {
+      try {
+        const res = await fetch(`/api/check-visitor?fp=${fpData!.visitorId}`)
+        const json = await res.json()
+        if (json.found) {
+          setReturningName(json.name || null)
+          setPageState('returning')
+        } else {
+          setPageState('form')
+        }
+      } catch {
+        setPageState('form')
+      }
+    }
+
+    checkVisitor()
+  }, [fpLoading, fpData])
+
+  // If fingerprint never loads after 4 s, just show the form
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (pageState === 'checking') setPageState('form')
+    }, 4000)
+    return () => clearTimeout(t)
+  }, [pageState])
 
   function set(field: keyof FormData, value: string | number) {
     setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  function deriveDeviceType(device: string): string {
+    const d = device.toLowerCase()
+    if (d.includes('ipad') || d.includes('tablet')) return 'tablet'
+    if (d === 'other' || d.includes('mac') || d.includes('pc') || d.includes('windows')) return 'desktop'
+    return 'mobile'
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -47,18 +99,31 @@ export default function StartPage() {
     }
     setLoading(true)
     setError('')
+
+    // Open demo immediately — this fires during the user gesture so it won't be blocked
+    openDemo()
+
     try {
-      const res = await fetch('/api/request-trial', {
+      const device = fpData?.device ?? ''
+      await fetch('/api/request-trial', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          source:        'live_demo',
+          fingerprintId: fpData?.visitorId              ?? null,
+          ipAddress:     fpData?.ip                     ?? null,
+          countryCode:   fpData?.ipLocation?.country?.code ?? null,
+          city:          fpData?.ipLocation?.city?.name    ?? null,
+          browser:       fpData?.browserName            ?? null,
+          deviceType:    device ? deriveDeviceType(device) : null,
+        }),
       })
-      if (!res.ok) throw new Error('Server error')
-      setSubmitted(true)
     } catch {
-      setError('Something went wrong. Please email us at hello@deployguard.io instead.')
+      // Non-blocking — the demo tab is already open
     } finally {
       setLoading(false)
+      setPageState('submitted')
     }
   }
 
@@ -67,9 +132,11 @@ export default function StartPage() {
       {/* Header */}
       <header className="px-6 py-4 border-b border-border bg-card flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center">
-            <Shield className="w-4 h-4 text-primary" />
-          </div>
+          <img
+            src="/images/deployguard-small.png"
+            className="h-16 transition-transform hover:scale-105 duration-500"
+            alt="DeployGuard"
+          />
           <span className="font-bold text-foreground">DeployGuard OS</span>
         </Link>
         <Link href="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -80,41 +147,57 @@ export default function StartPage() {
       <div className="flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-lg">
 
-          {/* Success state */}
-          {submitted ? (
+          {/* ── Checking fingerprint ── */}
+          {pageState === 'checking' && (
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                <Check className="w-8 h-8 text-primary" />
-              </div>
-              <h1 className="text-2xl font-extrabold text-foreground mb-3">
-                Request received — we&apos;ll be in touch!
-              </h1>
-              <p className="text-muted-foreground text-sm mb-2">
-                We&apos;ll contact <strong className="text-foreground">{form.email}</strong> within one business day
-                to arrange your demo and issue your 7-day trial key.
-              </p>
-              <p className="text-muted-foreground text-sm mb-8">
-                In the meantime, email us at{' '}
-                <a href="mailto:hello@deployguard.io" className="text-primary hover:underline">
-                  hello@deployguard.io
-                </a>{' '}
-                if you have urgent questions.
-              </p>
-              <Link href="/">
-                <Button variant="outline" className="gap-2">
-                  <ArrowLeft className="w-4 h-4" /> Back to home
-                </Button>
-              </Link>
+              <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground text-sm">Checking access…</p>
             </div>
-          ) : (
+          )}
+
+          {/* ── Returning visitor ── */}
+          {pageState === 'returning' && (
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+                <Shield className="w-8 h-8 text-green-600" />
+              </div>
+              <h1 className="text-2xl font-extrabold text-foreground mb-2">
+                Welcome back{returningName ? `, ${returningName.split(' ')[0]}` : ''}!
+              </h1>
+              <p className="text-muted-foreground text-sm mb-8">
+                We already have your details on file. Jump straight into the live demo.
+              </p>
+
+              <div className="bg-muted/60 border border-border rounded-2xl px-6 py-5 mb-8 text-left text-sm space-y-1">
+                <p className="font-semibold text-foreground mb-2">Demo login credentials</p>
+                <p className="text-muted-foreground">
+                  Click a role card on the login screen to auto-fill credentials.
+                </p>
+                <p className="text-muted-foreground mt-2">
+                  All demo passwords: <strong className="text-foreground font-mono">Demo2026!</strong>
+                </p>
+              </div>
+
+              <Button size="lg" className="w-full justify-center gap-2" onClick={openDemo}>
+                <ExternalLink className="w-4 h-4" />
+                Open Live Demo
+              </Button>
+            </div>
+          )}
+
+          {/* ── Lead capture form ── */}
+          {pageState === 'form' && (
             <>
               <div className="mb-8">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full mb-4">
+                  <Shield className="w-3.5 h-3.5" /> Live Demo Access
+                </div>
                 <h1 className="text-3xl font-extrabold text-foreground mb-2">
-                  Book a demo & start your free trial
+                  Try DeployGuard right now
                 </h1>
                 <p className="text-muted-foreground text-sm">
-                  Fill in your details and we&apos;ll reach out within one business day to walk you
-                  through the platform and issue your 7-day trial key.
+                  Tell us a little about your company and we&apos;ll drop you straight into the live system —
+                  no installation, no waiting, no credit card.
                 </p>
               </div>
 
@@ -139,9 +222,7 @@ export default function StartPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-foreground block mb-1.5">
-                      Your Name
-                    </label>
+                    <label className="text-sm font-medium text-foreground block mb-1.5">Your Name</label>
                     <input
                       type="text"
                       value={form.contactName}
@@ -204,29 +285,54 @@ export default function StartPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-sm font-medium text-foreground block mb-1.5">
-                    Anything specific you'd like to see? <span className="text-muted-foreground font-normal">(optional)</span>
-                  </label>
-                  <textarea
-                    value={form.message}
-                    onChange={(e) => set('message', e.target.value)}
-                    placeholder="e.g. We have 12 sites, weekly payroll, need to see the roster board and mobile app..."
-                    rows={3}
-                    className="w-full border border-input rounded-xl px-4 py-3 text-sm bg-card focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition resize-none"
-                  />
-                </div>
-
-                <Button type="submit" size="lg" className="w-full justify-center" loading={loading}>
-                  Request Demo & Trial Key
+                <Button type="submit" size="lg" className="w-full justify-center gap-2" loading={loading}>
+                  <ExternalLink className="w-4 h-4" />
+                  Enter the Live Demo
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  We respond within one business day. No spam, no automatic billing.
+                  Your details are saved so we can follow up. No spam, no automatic billing.
                 </p>
               </form>
             </>
           )}
+
+          {/* ── Submitted / demo opened ── */}
+          {pageState === 'submitted' && (
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                <ExternalLink className="w-8 h-8 text-primary" />
+              </div>
+              <h1 className="text-2xl font-extrabold text-foreground mb-3">
+                Demo opened in a new tab!
+              </h1>
+              <p className="text-muted-foreground text-sm mb-6">
+                The live DeployGuard environment should be open in a new browser tab.
+                If it didn&apos;t open automatically, use the link below.
+              </p>
+
+              <div className="bg-muted/60 border border-border rounded-2xl px-6 py-5 mb-6 text-left text-sm">
+                <p className="font-semibold text-foreground mb-2">Demo login credentials</p>
+                <p className="text-muted-foreground">
+                  Click a role card on the login screen to auto-fill credentials.
+                </p>
+                <p className="text-muted-foreground mt-2">
+                  All demo passwords: <strong className="text-foreground font-mono">Demo2026!</strong>
+                </p>
+              </div>
+
+              <Button size="lg" className="w-full justify-center gap-2 mb-4" onClick={openDemo}>
+                <ExternalLink className="w-4 h-4" />
+                Open Demo Again
+              </Button>
+
+              <p className="text-xs text-muted-foreground">
+                We&apos;ve noted your details and will follow up at{' '}
+                <strong className="text-foreground">{form.email}</strong>.
+              </p>
+            </div>
+          )}
+
         </div>
       </div>
     </div>

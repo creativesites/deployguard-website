@@ -31,6 +31,10 @@ export async function getUser(): Promise<User | null> {
   return user
 }
 
-export function isDogforceAdmin(userId: string): boolean {
-  return userId === process.env.NEXT_PUBLIC_DOGFORCE_ADMIN_UID
+export function isDogforceAdmin(userId: string, email?: string | null): boolean {
+  const adminUid   = process.env.NEXT_PUBLIC_DOGFORCE_ADMIN_UID
+  const adminEmail = process.env.NEXT_PUBLIC_DOGFORCE_ADMIN_EMAIL
+  if (adminUid   && userId === adminUid)   return true
+  if (adminEmail && email  === adminEmail) return true
+  return false
 }

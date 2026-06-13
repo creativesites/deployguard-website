@@ -50,6 +50,6 @@ export function truncate(text: string, maxLength: number): string {
 
 /** Build a WhatsApp message URL pre-filled with product info. */
 export function buildWhatsAppUrl(message: string): string {
-  const phone = "818036580510"; // +81 80 3658 0510 without symbols
+  const phone = "260979046745"; // +260 979 046 745 without symbols
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }

@@ -1,8 +1,29 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Button from '@/components/ui/Button'
 import { CheckCircle2, Minus } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Pricing — DeployGuard OS',
+  description:
+    'Simple, honest pricing for security companies of every size. Start with a 7-day free trial. Starter, Professional, and Enterprise plans with no hidden fees.',
+  alternates: { canonical: 'https://deployguard.io/pricing' },
+  openGraph: {
+    title: 'DeployGuard OS Pricing — Simple Plans for Security Companies',
+    description: 'Roster, payroll, GPS attendance, and AI features — find the plan that fits your guard count.',
+    url: 'https://deployguard.io/pricing',
+    images: [{ url: '/screenshots/executive-dashboard.png', width: 1280, height: 720 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DeployGuard OS Pricing',
+    description: '7-day free trial. No credit card. Full access from day one.',
+    images: ['/screenshots/executive-dashboard.png'],
+  },
+}
+
 
 const tiers = [
   {
@@ -17,7 +38,7 @@ const tiers = [
     name:       'Professional',
     guardLimit: 'Up to 250 guards',
     description:'Full operational control for established companies.',
-    features:   ['Everything in Starter', 'Equipment & firearms tracking', 'Fleet management', 'Leave, loans & discipline modules', 'Advanced reporting & analytics', 'Shift planning board', 'Multi-country payroll localization', 'Priority support'],
+    features:   ['Everything in Starter', 'Equipment & firearms tracking', 'Fleet management', 'Leave, loans & discipline modules', 'Advanced reporting & analytics', 'Shift planning board', 'DeployGuard AI Engine (pass-through cost)', 'Priority support'],
     cta:        'Request a Demo',
     highlighted: true,
     badge:      'Most Popular',
@@ -26,7 +47,7 @@ const tiers = [
     name:       'Enterprise',
     guardLimit: 'Unlimited guards',
     description:'For large operations or companies with existing Odoo.',
-    features:   ['Everything in Professional', 'AI shift planner', 'REST API access', 'Custom localization packs', 'Enterprise App License option', 'Dedicated implementation', 'Custom SLA'],
+    features:   ['Everything in Professional', 'DeployGuard AI Engine & custom tuning', 'REST API access', 'Custom localization packs', 'Enterprise App License option', 'Dedicated implementation', 'Custom SLA'],
     cta:        'Contact Us',
     highlighted: false,
   },
@@ -49,7 +70,7 @@ const rows: Row[] = [
   { label: 'Advanced reporting',         starter: false,       professional: true,        enterprise: true          },
   { label: 'Shift planning board',       starter: false,       professional: true,        enterprise: true          },
   { label: 'Multi-country payroll',      starter: false,       professional: true,        enterprise: true          },
-  { label: 'AI shift planner',           starter: false,       professional: false,       enterprise: true          },
+  { label: 'DeployGuard AI Engine',      starter: false,       professional: 'Token Cost', enterprise: 'Included'    },
   { label: 'REST API access',            starter: false,       professional: false,       enterprise: true          },
   { label: 'Enterprise App License',     starter: false,       professional: false,       enterprise: true          },
   { label: 'Support',                    starter: 'Email',     professional: 'Priority',  enterprise: 'Dedicated'   },

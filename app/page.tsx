@@ -1,14 +1,37 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Button from '@/components/ui/Button'
 import ScreenshotShowcase from '@/components/ScreenshotShowcase'
+import { MobileAppSection } from '@/components/home/MobileAppSection'
 import {
   CalendarDays, DollarSign, MapPin, FileText, Wrench, Sparkles,
   ArrowRight, CheckCircle2, AlertTriangle, TrendingDown, Clock,
-  Shield, Globe, Download, PhoneCall, Package,
+  Shield, Globe, Download, PhoneCall, Package, Bot,
 } from 'lucide-react'
+import { HeroSlider } from '@/components/home/HeroSlider'
+
+export const metadata: Metadata = {
+  title: 'DeployGuard OS — Workforce Management for Private Security Companies',
+  description:
+    'Replace your roster spreadsheet, payroll Excel, and manual invoices with one platform. Auto-rostering, GPS check-in, Namibian payroll compliance, client billing, and AI-powered operations — built for African security companies.',
+  alternates: { canonical: 'https://deployguard.io' },
+  openGraph: {
+    title: 'DeployGuard OS — The Operating System Built for Security',
+    description: 'Roster automation, payroll compliance, GPS attendance, and AI-powered shift management in one platform.',
+    url: 'https://deployguard.io',
+    images: [{ url: '/screenshots/executive-dashboard.png', width: 1280, height: 720 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DeployGuard OS — Built for Security Companies',
+    description: 'From Windhoek to Lusaka — automate your guards, payroll, and billing.',
+    images: ['/screenshots/executive-dashboard.png'],
+  },
+}
+
 
 /* ─── Data ────────────────────────────────────────────────────────────────── */
 
@@ -58,8 +81,8 @@ const features = [
   },
   {
     icon:  <Sparkles className="w-5 h-5" />,
-    title: 'AI Shift Planner',
-    body:  'Scores guard–post fit, flags fairness warnings, and prevents over-rostering before it happens. Your roster team works smarter.',
+    title: 'DeployGuard AI Engine',
+    body:  'Ten built-in AI tools and a global floating assistant. Automate attendance checks, client billing audits, risk profiles, shift filling, and labor-compliant discipline advice.',
   },
 ]
 
@@ -104,7 +127,6 @@ export default function HomePage() {
     <>
       <Navbar />
       <main>
-
         {/* ── Hero ──────────────────────────────────────────────────────────── */}
         <section className="relative bg-secondary overflow-hidden pt-28 pb-0 px-4 sm:px-6 lg:px-8">
           <div
@@ -115,18 +137,18 @@ export default function HomePage() {
               backgroundSize: '48px 48px',
             }}
           />
-          <div aria-hidden className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary/15 rounded-full blur-3xl pointer-events-none" />
+          {/* <div aria-hidden className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary/15 rounded-full blur-3xl pointer-events-none" /> */}
 
           <div className="relative max-w-5xl mx-auto text-center pt-8">
             {/* Badges */}
-            <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
+            {/* <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
               <span className="inline-flex items-center gap-1.5 bg-primary/15 border border-primary/30 text-primary text-xs font-semibold px-3 py-1.5 rounded-full">
                 <Shield className="w-3 h-3" /> Built for African Security Companies
               </span>
               <span className="inline-flex items-center gap-1.5 bg-white/8 border border-white/15 text-white/60 text-xs font-medium px-3 py-1.5 rounded-full">
                 <Package className="w-3 h-3" /> Powered by Odoo 19 Community
               </span>
-            </div>
+            </div> */}
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.06] tracking-tight text-balance mb-6">
               The Operating System<br className="hidden sm:block" />
@@ -256,6 +278,62 @@ export default function HomePage() {
                   <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Mobile App ────────────────────────────────────────────────────── */}
+        <MobileAppSection />
+
+        {/* ── AI Engine Callout ──────────────────────────────────────────────── */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-secondary via-secondary to-[#0b1329] text-white relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: 'linear-gradient(white 1px,transparent 1px),linear-gradient(90deg,white 1px,transparent 1px)',
+              backgroundSize: '48px 48px',
+            }}
+          />
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+            <div className="max-w-2xl text-left">
+              <span className="inline-flex items-center gap-1.5 bg-primary/15 border border-primary/30 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5" /> Introducing DeployGuard AI
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
+                Operational intelligence, built directly into Odoo.
+              </h2>
+              <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-6">
+                Not a standalone chatbot, but a deep layer of intelligence embedded into your daily screens. 
+                From automated attendance audits and billing checks to shift optimization and progressive discipline advisors.
+              </p>
+              <div className="flex gap-4">
+                <Link href="/ai">
+                  <Button variant="primary" className="gap-2 shadow-glow">
+                    Explore AI Features <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link href="/start">
+                  <Button variant="outline" className="text-white border-white/20 hover:bg-white/10 hover:text-white">
+                    Book a Free Demo
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            {/* AI Floating Card Preview */}
+            <div className="w-full md:w-80 bg-white/5 border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur font-mono text-[11px] text-white/90">
+              <div className="flex items-center gap-2 mb-3 text-primary">
+                <Bot className="w-4 h-4" />
+                <span className="font-semibold uppercase tracking-wider">Smart Shift Fill</span>
+              </div>
+              <p className="italic mb-3">"Guard L. Nghipandulwa called in sick for tomorrow's shift at Site Alpha."</p>
+              <div className="bg-white/5 border border-white/10 rounded-lg p-2.5 space-y-2">
+                <p className="font-bold text-[10px] text-white/50">TOP REPLACEMENT RECS:</p>
+                <p className="text-green-400">1. T. Shikongo (Grade A, Rel: 91/100)</p>
+                <p className="text-white/70">2. S. Hamukoto (Grade B, Rel: 88/100)</p>
+                <p className="text-white/70">3. J. Nangolo (Grade B, Rel: 85/100)</p>
+              </div>
             </div>
           </div>
         </section>
