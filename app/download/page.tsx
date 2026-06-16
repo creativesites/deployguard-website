@@ -29,7 +29,7 @@ const roles = [
 const setupSteps = [
   { n: '1', title: 'Download the APK',        body: 'Tap the button above. Your browser may warn you — allow the download. The file is safe.' },
   { n: '2', title: 'Allow Unknown Sources',   body: 'On Android: Settings → Security → Install Unknown Apps → enable for your browser or file manager.' },
-  { n: '3', title: 'Install DeployGuard',     body: 'Open the downloaded file and tap Install. The app is ~74 MB and takes under a minute.' },
+  { n: '3', title: 'Install DeployGuard',     body: 'Open the downloaded file and tap Install. The app is ~73 MB and takes under a minute.' },
   { n: '4', title: 'Connect to Demo Server',  body: 'Launch the app. When prompted for a server URL, enter the demo server address shown below.' },
   { n: '5', title: 'Log in with demo credentials', body: 'Use the role credentials below. Each role shows a different view of the same live data.' },
 ]
