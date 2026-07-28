@@ -6,8 +6,14 @@ import clsx from 'clsx'
 import {
   LayoutDashboard, CalendarDays, DollarSign,
   ClipboardList, AlertTriangle, HelpCircle, Truck,
-  ClipboardCheck,
+  ClipboardCheck, ShieldAlert, MessageSquareCode,
+  FileCheck2, Building2, Layers, Sparkles
 } from 'lucide-react'
+
+interface GalleryItem {
+  img: string
+  caption: string
+}
 
 interface Tab {
   id:       string
@@ -17,186 +23,215 @@ interface Tab {
   body:     string
   img:      string
   alt:      string
-  ready:    true
-  gallery?: { img: string; caption: string }[]
+  gallery?: GalleryItem[]
 }
 
 const tabs: Tab[] = [
   {
     id:      'dashboard',
-    label:   'Dashboard',
+    label:   'Executive Dashboard',
     icon:    <LayoutDashboard className="w-4 h-4" />,
     heading: 'Your whole operation at a glance.',
-    body:    'The Executive Dashboard surfaces what matters right now — active guards, present today, AWOL alerts, unassigned slots, and pending invoices — all on one screen. No digging through reports.',
-    img:     '/screenshots/dashboard.png',
+    body:    'Real-time operational KPIs — active guards, posts present today, AWOL alerts, critical gaps, and unbilled revenue — all on one central screen.',
+    img:     '/screenshots/executive-dashboard.png',
     alt:     'DeployGuard OS Executive Dashboard showing live operational KPIs',
-    ready:   true,
   },
   {
-    id:      'roster',
-    label:   'Roster Board',
+    id:      'rostering',
+    label:   'Rostering Hub',
     icon:    <CalendarDays className="w-4 h-4" />,
-    heading: 'Every post filled. Every shift confirmed.',
-    body:    'The Roster Board assigns guards to posts across the week on a live calendar. Day shifts, night shifts, multiple sites — confirmed in colour, unassigned flagged immediately. Fairness warnings stop over-rostering before it happens.',
-    img:     '/screenshots/roaster-batch.png',
-    alt:     'DeployGuard OS Roster Board showing weekly guard assignments across sites',
-    ready:   true,
+    heading: 'AI Rostering & Explainable Guard Scoring',
+    body:    'Zero black boxes. Every guard match displays an explicit score_breakdown evaluating reliability, site familiarity, grade requirements, fairness penalties, and AWOL history.',
+    img:     '/screenshots/explainable-scoring.png',
+    alt:     'DeployGuard OS Explainable Guard Scoring and Roster Board',
+    gallery: [
+      { img: '/screenshots/explainable-scoring.png', caption: 'Explainable Scoring' },
+      { img: '/screenshots/rostering-hub-dashboard.png', caption: 'Rostering Hub' },
+      { img: '/screenshots/rostering-hub-monthly-roster.png', caption: 'Monthly Roster' },
+    ],
   },
   {
     id:      'attendance',
-    label:   'Attendance',
+    label:   'Attendance Console',
     icon:    <ClipboardCheck className="w-4 h-4" />,
-    heading: 'Check-in, check-out — captured instantly.',
-    body:    'The Posting Console lets supervisors record every guard\'s arrival and departure in seconds. Late arrivals, early departures, and AWOL statuses are flagged in real time — feeding directly into payroll and reliability scores.',
+    heading: 'Posting Console, Summary Grid & Heatmaps',
+    body:    'Record guard arrival/departure in seconds. Features full Attendance Summary Grids, historical logs, and site heatmaps to spot late patterns and absenteeism instantly.',
     img:     '/screenshots/posting-console.png',
-    alt:     'DeployGuard OS Posting Console showing daily attendance capture',
-    ready:   true,
+    alt:     'DeployGuard OS Posting Console and Attendance Summary Grid',
+    gallery: [
+      { img: '/screenshots/posting-console.png', caption: 'Posting Console' },
+      { img: encodeURI('/screenshots/Attendance-Summary-Grid.png'), caption: 'Summary Grid' },
+      { img: encodeURI('/screenshots/Attendance Heatmap.png'), caption: 'Attendance Heatmap' },
+      { img: encodeURI('/screenshots/Attendance History.png'), caption: 'Attendance History' },
+    ],
   },
   {
     id:      'payroll',
-    label:   'Payroll',
+    label:   'Statutory Payroll',
     icon:    <DollarSign className="w-4 h-4" />,
-    heading: 'Every pay run. Every rate. Correct.',
-    body:    'The Payroll Command Center processes each period automatically — normal time, overtime, Saturday, Sunday, public holiday, and night rates. Bulk confirm all drafts in one click, mark as paid, print batch reports.',
-    img:     '/screenshots/payroll-command-center.png',
-    alt:     'DeployGuard OS Payroll Command Center showing payslips and period summary',
-    ready:   true,
+    heading: 'Payroll Command Center & Payslip Designer',
+    body:    'Built for Namibia (PAYE, SSC) and Zambia (NAPSA, NHIMA, WCF, PAYE). Auto-splits 12-hour shifts across midnight with custom QWeb Payslip Designer tools.',
+    img:     '/screenshots/Payroll-Command-Center.png',
+    alt:     'DeployGuard OS Payroll Command Center and Payslip Breakdown',
+    gallery: [
+      { img: '/screenshots/Payroll-Command-Center.png', caption: 'Command Center' },
+      { img: '/screenshots/statutory-payslip-breakdown.png', caption: 'Payslip Breakdown' },
+      { img: '/screenshots/Payslip-Designer.png', caption: 'Payslip Designer' },
+    ],
   },
   {
-    id:      'slots',
-    label:   'Shift Slots',
-    icon:    <ClipboardList className="w-4 h-4" />,
-    heading: 'Every slot. Every guard. Every shift.',
-    body:    'Roster Slots give you a detailed log of every assigned shift — client site, post, shift template, employee, and confirmation status. Filter by date, site, or batch. Full audit trail included.',
-    img:     '/screenshots/roaster-slots.png',
-    alt:     'DeployGuard OS Roster Slots list showing all shift assignments',
-    ready:   true,
+    id:      'whatsapp',
+    label:   'WhatsApp Field AI',
+    icon:    <MessageSquareCode className="w-4 h-4" />,
+    heading: 'Field Check-Ins & AI Assistant on WhatsApp',
+    body:    'Supervisors record attendance, report AWOL guards, and request replacements directly inside WhatsApp. Includes an in-Odoo live conversational workspace.',
+    img:     '/screenshots/whatsapp-ai-workspace.png',
+    alt:     'DeployGuard OS WhatsApp AI Field Workspace',
+  },
+  {
+    id:      'billing',
+    label:   'ZRA & Client Billing',
+    icon:    <Building2 className="w-4 h-4" />,
+    heading: 'ZRA Smart Invoice & Client Service Reports',
+    body:    'Direct ZRA VSDC API submission with receipt signatures, QR codes, and auto-retry crons. Attach verifiable client service & attendance reports to eliminate invoice disputes.',
+    img:     '/screenshots/zra-smart-invoice.png',
+    alt:     'DeployGuard OS ZRA Smart Invoice Billing and Client Service Report',
+    gallery: [
+      { img: '/screenshots/zra-smart-invoice.png', caption: 'ZRA Smart Invoice' },
+      { img: '/screenshots/client-service-report.png', caption: 'Client Service Report' },
+      { img: '/screenshots/client-onboarding-wizard.png', caption: 'Onboarding Wizard' },
+    ],
   },
   {
     id:      'incidents',
-    label:   'Discipline',
+    label:   'Discipline & Incidents',
     icon:    <AlertTriangle className="w-4 h-4" />,
-    heading: 'Every incident logged. Every decision documented.',
-    body:    'Behavioural incidents are captured with severity, evidence, and guard acknowledgment tracked end-to-end. Approvals flow through a structured workflow — appeal, overturn, or uphold — so every disciplinary decision has a defensible paper trail.',
+    heading: 'Behavioral Incidents & Audit Trails',
+    body:    'Log guard behavioral incidents with severity, evidence, and appeals. Deduct disciplinary fines directly from statutory payroll with full audit documentation.',
     img:     '/screenshots/behavioral-incident1.png',
-    alt:     'DeployGuard OS Behavioural Incident management — incident detail view',
-    ready:   true,
+    alt:     'DeployGuard OS Disciplinary Incident Management',
     gallery: [
       { img: '/screenshots/behavioral-incident1.png', caption: 'Incident Detail' },
-      { img: '/screenshots/behavioral-incident2.png', caption: 'Incident List'   },
+      { img: '/screenshots/behavioral-incident2.png', caption: 'Incident List' },
       { img: '/screenshots/behavioral-incident3.png', caption: 'Incident Kanban' },
     ],
   },
   {
     id:      'transport',
-    label:   'Transport',
+    label:   'Fleet & Transport',
     icon:    <Truck className="w-4 h-4" />,
-    heading: 'Every vehicle. Every run. On record.',
-    body:    'Transport Runs track shuttle routes, passenger manifests, and departure times for every trip. Pre-departure vehicle inspections and fuel logs create a complete fleet history — guards arrive on time and every kilometre is accounted for.',
+    heading: 'Vehicle Runs & Passenger Manifests',
+    body:    'Track guard shuttle runs, route schedules, passenger manifests, fuel logs, and pre-departure vehicle inspections in real time.',
     img:     '/screenshots/transport-run.png',
-    alt:     'DeployGuard OS Transport Run showing shuttle route and passenger manifest',
-    ready:   true,
+    alt:     'DeployGuard OS Transport Run and Fleet Operations',
   },
   {
     id:      'help',
     label:   'Help Centre',
     icon:    <HelpCircle className="w-4 h-4" />,
-    heading: 'Built-in guidance. No manual required.',
-    body:    'The DeployGuard Help Centre is embedded directly in the platform. Beginner-friendly articles explain every module — from adding a guard to running payroll — searchable by keyword and organised by topic.',
+    heading: 'Country-Aware In-App Guidance',
+    body:    'Embedded OWL Help Centre with searchable articles for Namibia and Zambia operations — from guard onboarding to tax filing.',
     img:     '/screenshots/help-center.png',
-    alt:     'DeployGuard OS Help Centre showing categorised how-to articles',
-    ready:   true,
+    alt:     'DeployGuard OS Built-in Help Centre',
   },
 ]
 
 export default function ScreenshotShowcase() {
-  const [activeId,       setActiveId]       = useState(tabs[0].id)
-  const [activeGallery,  setActiveGallery]  = useState(0)
+  const [activeId, setActiveId] = useState(tabs[0].id)
+  const [activeGalleryIdx, setActiveGalleryIdx] = useState(0)
 
   const tab = tabs.find((t) => t.id === activeId)!
 
   function handleTabChange(id: string) {
     setActiveId(id)
-    setActiveGallery(0)
+    setActiveGalleryIdx(0)
   }
 
-  const currentImg = tab.gallery ? tab.gallery[activeGallery].img : tab.img
+  // Get active image from gallery or primary image
+  const currentImg = tab.gallery && tab.gallery[activeGalleryIdx]
+    ? tab.gallery[activeGalleryIdx].img
+    : tab.img
 
   return (
     <div className="max-w-6xl mx-auto">
       {/* Tab bar */}
-      <div className="flex overflow-x-auto gap-1 p-1 bg-muted rounded-2xl mb-10 scrollbar-hide">
+      <div className="flex overflow-x-auto gap-1.5 p-1.5 bg-muted rounded-2xl mb-8 scrollbar-hide">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => handleTabChange(t.id)}
             className={clsx(
-              'flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all flex-1 justify-center min-w-[64px]',
+              'flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex-1 justify-center min-w-[110px]',
               activeId === t.id
-                ? 'bg-secondary text-white shadow-sm'
-                : 'text-muted-foreground hover:text-foreground hover:bg-background'
+                ? 'bg-secondary text-white shadow-md'
+                : 'text-muted-foreground hover:text-foreground hover:bg-background/80'
             )}
           >
             {t.icon}
-            <span className="hidden sm:block">{t.label}</span>
+            <span>{t.label}</span>
           </button>
         ))}
       </div>
 
-      {/* Content */}
-      <div className="grid md:grid-cols-5 gap-10 items-start">
-        {/* Text side */}
-        <div className="md:col-span-2 order-2 md:order-1">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-            {tab.icon}
+      {/* Main Content Area */}
+      <div className="grid md:grid-cols-12 gap-8 items-start">
+        {/* Left Side: Text Description & Sub-Gallery Thumbnails */}
+        <div className="md:col-span-4 order-2 md:order-1 flex flex-col justify-between h-full">
+          <div>
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
+              {tab.icon}
+            </div>
+            <h3 className="text-2xl font-extrabold text-foreground mb-3 leading-snug">{tab.heading}</h3>
+            <p className="text-muted-foreground leading-relaxed text-sm">{tab.body}</p>
           </div>
-          <h3 className="text-2xl font-extrabold text-foreground mb-3 leading-snug">{tab.heading}</h3>
-          <p className="text-muted-foreground leading-relaxed text-sm">{tab.body}</p>
 
-          {/* Gallery thumbnails for tabs that have multiple screenshots */}
-          {tab.gallery && (
-            <div className="flex gap-2 mt-6">
-              {tab.gallery.map((g, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveGallery(i)}
-                  className={clsx(
-                    'flex-1 rounded-lg overflow-hidden border-2 transition-all',
-                    activeGallery === i ? 'border-primary shadow-md' : 'border-border opacity-60 hover:opacity-90'
-                  )}
-                  title={g.caption}
-                >
-                  <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
-                    <Image
-                      src={g.img}
-                      alt={g.caption}
-                      fill
-                      className="object-cover object-top"
-                      sizes="120px"
-                    />
-                  </div>
-                  <p className="text-[10px] font-medium text-center py-1 bg-muted/60 text-muted-foreground">
-                    {g.caption}
-                  </p>
-                </button>
-              ))}
+          {/* Gallery sub-nav buttons if tab has multiple screenshots */}
+          {tab.gallery && tab.gallery.length > 1 && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+                <Layers className="w-3.5 h-3.5" /> Module Views ({tab.gallery.length})
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {tab.gallery.map((g, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveGalleryIdx(i)}
+                    className={clsx(
+                      'p-1.5 rounded-xl border text-left transition-all text-[11px] font-semibold flex flex-col items-center gap-1',
+                      activeGalleryIdx === i
+                        ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
+                        : 'border-border text-muted-foreground hover:border-foreground/30 hover:bg-muted/50'
+                    )}
+                  >
+                    <span className="truncate w-full text-center">{g.caption}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Screenshot side */}
-        <div
-          className="md:col-span-3 order-1 md:order-2 rounded-2xl border border-border overflow-hidden shadow-card-hover bg-muted/20"
-          style={{ aspectRatio: '16/9' }}
-        >
-          <div className="relative w-full h-full">
+        {/* Right Side: Responsive Framed Screenshot Container */}
+        <div className="md:col-span-8 order-1 md:order-2 rounded-2xl border border-border bg-slate-950 overflow-hidden shadow-2xl relative">
+          {/* Fake Browser Top Chrome Bar */}
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-black/60 border-b border-white/10 text-xs text-white/50">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
+            <div className="flex-1 mx-4 bg-white/10 rounded px-2.5 py-0.5 font-mono text-[11px] truncate">
+              dogforce.deployguard.io/web#{tab.id}
+            </div>
+          </div>
+
+          {/* Flexible Image Frame - object-contain prevents aspect ratio stretching */}
+          <div className="relative w-full bg-slate-950/90 p-2" style={{ aspectRatio: '16/10' }}>
             <Image
               key={currentImg}
               src={currentImg}
               alt={tab.alt}
               fill
-              className="object-cover object-top"
-              sizes="(max-width: 768px) 100vw, 60vw"
+              className="object-contain object-top p-1"
+              sizes="(max-width: 768px) 100vw, 65vw"
               priority={activeId === tabs[0].id}
             />
           </div>
