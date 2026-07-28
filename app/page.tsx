@@ -154,10 +154,10 @@ export default function HomePage() {
               </div>
               <div className="relative w-full" style={{ aspectRatio: '16/8' }}>
                 <Image
-                  src="/screenshots/executive-dashboard.png"
-                  alt="DeployGuard OS Executive Dashboard"
+                  src="/screenshots/Attendance-Summary-Grid.png"
+                  alt="DeployGuard OS Attendance Summary Grid"
                   fill
-                  className="object-cover object-top"
+                  className="object-contain object-top bg-slate-950/90 p-1"
                   priority
                 />
               </div>
