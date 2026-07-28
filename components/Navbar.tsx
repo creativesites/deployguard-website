@@ -46,11 +46,11 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
+          <a href="/DeployGuard_Executive_Brochure.pdf" download target="_blank" className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+            <Download className="w-3.5 h-3.5" /> Brochure (PDF)
+          </a>
           <Link href="/download" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            <Download className="w-3.5 h-3.5" /> Get App
-          </Link>
-          <Link href="/start" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Request Trial
+            Get App
           </Link>
           <Link href="/start">
             <Button size="sm" variant="primary">Book a Demo</Button>
